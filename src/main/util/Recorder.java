@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class Recorder {
     
-    File csvOutputFile; 
+    private File csvOutputFile; 
 
     public ArrayList<double[]> data = new ArrayList<>();
 

@@ -23,6 +23,6 @@ public class App {
         ode.setEndTime(10);
         ode.setStepSize(0.25);
 
-        
+        ode.run();
     }
 }
