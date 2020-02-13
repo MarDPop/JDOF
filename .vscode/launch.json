@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Default",
+            "request": "launch",
+            "mainClass": "main.App",
+            "args": [ "test" ],
+            "projectName": "JDOF"
+        }
+    ]
+}
