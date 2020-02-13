@@ -6,7 +6,8 @@ package main.util;
 public interface Action {
 
     /**
-     * Gets the force (a) and moment (b)
+     * Gets the force (a) and moment (b) 
+     * Force are expected in Global Frame (THIS IS CONTESTED), Moments in Body Frame
      * @return
      */
     public MyPair<Cartesian,Cartesian> getAction();

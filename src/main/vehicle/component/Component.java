@@ -4,8 +4,14 @@ import main.util.Cartesian;
 
 public abstract class Component {
 
+    /**
+     * Mass in kg
+     */
     private double mass;
 
+    /**
+     * location in m
+     */
     protected Cartesian location;
 
     public Component() {};
