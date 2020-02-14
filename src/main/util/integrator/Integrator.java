@@ -1,13 +1,16 @@
-package main.util.ode;
+package main.util.integrator;
 
 import main.util.Body;
 import java.util.HashMap;
 
-public abstract class ODE {
+/**
+ * Abstract class to contain all integerators
+ */
+public abstract class Integrator {
 
     // Time variables
     protected double time_end;
-    protected double time;
+    protected double time = 0;
     protected double dt;
 
     /**
@@ -20,7 +23,10 @@ public abstract class ODE {
      */
     public HashMap<String,Object> options = new HashMap<String,Object>();
 
-    public ODE() {}
+    /**
+     * Empty constructor 
+     */
+    public Integrator() {}
 
     /**
      * Sets Vehicle
@@ -51,7 +57,7 @@ public abstract class ODE {
      * @param time
      */
     public void setEndTime(double time) {
-        this.time = time;
+        this.time_end = time;
     }
 
     /**
@@ -86,9 +92,15 @@ public abstract class ODE {
         this.dt = dt;
     }
 
-    public void setup(){}
+    public void setup(){
+        if (this.body.getMass() <= 0) {
+            
+        }
+    }
 
     public abstract void step();
+
+    public void finish() {}
 
     protected boolean nextStep() {
         // time step could be done here
@@ -98,9 +110,11 @@ public abstract class ODE {
     public void output() {}
 
     public final void run() {
+        setup();
         do {
             step();
             output();
         } while(nextStep());
+        finish();
     }
 }

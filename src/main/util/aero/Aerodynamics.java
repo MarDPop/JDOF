@@ -2,6 +2,7 @@ package main.util.aero;
 
 import main.util.*;
 import main.vehicle.Vehicle;
+import main.util.aero.atmosphere.*;
 import java.util.ArrayList;
 
 public abstract class Aerodynamics implements Action {
@@ -84,7 +85,7 @@ public abstract class Aerodynamics implements Action {
     /**
      * Main function that computes / retrieves the aero coefficients should be overridden
      */
-    public abstract void getAeroCoefficients();
+    protected abstract void calcAeroCoefficients();
 
     /**
      * gets the forces and moments
@@ -112,21 +113,23 @@ public abstract class Aerodynamics implements Action {
         double cons = this.dynamicPressure*this.area_reference;
 
         // Vector(s)
-        Cartesian vector_lift = vehicle.getAxis().x.cross(freestream);
+        Cartesian vector_lift = vehicle.getAxis().y.cross(freestream);
         vector_lift.normalize();
 
         // Angles
         // NOTE: Stability axis is defined as: y = body axis y (right), x = freestream, z = x cross y
-        this.angleOfAttack = Math.asin(freestream.dot(vehicle.getAxis().z)/airspeed);
+        this.angleOfAttack = -Math.asin(freestream.dot(vehicle.getAxis().z)/airspeed); // remember z is down
         this.sideSlipAngle = Math.asin(freestream.dot(vehicle.getAxis().y)/airspeed);
         this.rollAngle = Math.asin(vehicle.getAxis().y.z);
 
-        getAeroCoefficients();
+        calcAeroCoefficients();
 
         // Get forces
         double drag = cons*C.getCD();
         double side = cons*C.getCR();
         double lift = cons*C.getCL();
+
+        System.out.println("lift = " + lift +" density = " + this.atm.getDensity());
 
         // Convert Forces to Global Frame
         Cartesian forces = vector_lift.multiply(lift).plus(vehicle.getAxis().y.multiply(side)).minus(freestream.multiply(drag/airspeed));
@@ -138,6 +141,32 @@ public abstract class Aerodynamics implements Action {
         moments.z = cons*this.span_reference*C.getCMz();
 
         return new MyPair<Cartesian, Cartesian>(forces,moments);
+    }
+
+    // Getters
+
+    public AeroCoefficients getAeroCoefficients() {
+        return this.C;
+    }
+
+    public double getAngleOfAttack() {
+        return this.angleOfAttack;
+    }
+
+    public double getSideSlip() {
+        return this.sideSlipAngle;
+    }
+
+    public double getMach() {
+        return this.mach;
+    }
+
+    public double getReynolds() {
+        return this.reynolds;
+    }
+
+    public double getDynamicPressure() {
+        return this.dynamicPressure;
     }
 
 }

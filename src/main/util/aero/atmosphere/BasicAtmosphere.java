@@ -1,4 +1,4 @@
-package main.util.aero;
+package main.util.aero.atmosphere;
 
 import main.util.Cartesian;
 

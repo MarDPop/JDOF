@@ -22,11 +22,6 @@ public class Vehicle extends Body {
     public ArrayList<Controller> controllers = new ArrayList<Controller>();
 
     /**
-     * List of all actions (force and moment on CG) relevant for accleration
-     */
-    public ArrayList<Action> actions = new ArrayList<Action>();
-
-    /**
      * List of all components (item with mass and location) relevant for inertia
      */
     public ArrayList<Component> components = new ArrayList<Component>();
@@ -49,8 +44,13 @@ public class Vehicle extends Body {
      */
     public void setAerodynamics(Aerodynamics aero) {
         this.aero = aero;
-        this.actions.add(aero);
+        addAction(aero);
     }
+
+    public Aerodynamics getAero(){
+        return this.aero;
+    }
+    
 
 
 }

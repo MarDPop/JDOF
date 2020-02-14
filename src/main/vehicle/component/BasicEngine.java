@@ -16,6 +16,7 @@ public class BasicEngine extends Engine {
     public BasicEngine(Vehicle v, double maxThrust) {
         this.axis = v.getAxis().x;
         this.throttle = 1.0;
+        this.maxThrust = maxThrust;
     }
 
     @Override

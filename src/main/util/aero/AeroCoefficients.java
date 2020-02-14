@@ -273,4 +273,67 @@ public class AeroCoefficients {
         }
     }
 
+    /**
+     * @return the cFx
+     */
+    public double getCFx() {
+        return CFx;
+    }
+
+    /**
+     * @param cFx the cFx to set
+     */
+    public void setCFx(double cFx) {
+        CFx = cFx;
+    }
+
+    /**
+     * @return the cFy
+     */
+    public double getCFy() {
+        return CFy;
+    }
+
+    /**
+     * @param cFy the cFy to set
+     */
+    public void setCFy(double cFy) {
+        CFy = cFy;
+    }
+
+    /**
+     * @return the cFz
+     */
+    public double getCFz() {
+        return CFz;
+    }
+
+    /**
+     * @param cFz the cFz to set
+     */
+    public void setCFz(double cFz) {
+        CFz = cFz;
+    }
+
+    /**
+     * @param cMx the cMx to set
+     */
+    public void setCMx(double cMx) {
+        CMx = cMx;
+    }
+
+    /**
+     * @param cMy the cMy to set
+     */
+    public void setCMy(double cMy) {
+        CMy = cMy;
+    }
+
+    /**
+     * @param cMz the cMz to set
+     */
+    public void setCMz(double cMz) {
+        CMz = cMz;
+    }
+
 }

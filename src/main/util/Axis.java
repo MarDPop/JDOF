@@ -50,6 +50,13 @@ public class Axis {
         return new double[][]{{x.x,x.y,x.z},{y.x,y.y,y.z},{z.x,z.y,z.z}};
     }
 
+    @Override
+    public String toString() {
+        return "[ \t" + this.x.x + ",\t" + this.x.y + ",\t" + this.x.z + 
+                " ;\n\t" + this.y.x + ",\t" + this.y.y + ",\t" + this.y.z + 
+                " ;\n\t" + this.z.x + ",\t" + this.z.y + ",\t" + this.z.z + ";\t]";
+    }
+
     public Axis add(double a) {
         Axis B = new Axis();
         B.x = this.x.plus(a);
@@ -163,28 +170,31 @@ public class Axis {
         return out;
     }
 
-    public void getXRotationMatrix(double angle) {
-        this.x.x = 1;
-        this.y.y = Math.cos(angle);
-        this.y.z = -Math.sin(angle);
-        this.z.y = -this.z.y;
-        this.z.z = this.y.y;
+    public static Axis getXRotationMatrix(double angle) {
+        Axis out = new Axis(true);
+        out.y.y = Math.cos(angle);
+        out.y.z = -Math.sin(angle);
+        out.z.y = -out.y.z;
+        out.z.z = out.y.y;
+        return out;
     }
 
-    public void getYRotationMatrix(double angle) {
-        this.y.y = 1;
-        this.x.x = Math.cos(angle);
-        this.x.z = Math.sin(angle);
-        this.z.x = -this.z.y;
-        this.z.z = this.y.y;
+    public static Axis getYRotationMatrix(double angle) {
+        Axis out = new Axis(true);
+        out.x.x = Math.cos(angle);
+        out.x.z = Math.sin(angle);
+        out.z.x = -out.x.z;
+        out.z.z = out.x.x;
+        return out;
     }
 
-    public void getZRotationMatrix(double angle) {
-        this.z.z = 1;
-        this.x.x = Math.cos(angle);
-        this.x.y = -Math.sin(angle);
-        this.y.x = -this.z.y;
-        this.y.y = this.y.y;
+    public static Axis getZRotationMatrix(double angle) {
+        Axis out = new Axis(true);
+        out.x.x = Math.cos(angle);
+        out.x.y = -Math.sin(angle);
+        out.y.x = -out.x.y;
+        out.y.y = out.x.x;
+        return out;
     }
 
     public static Axis getYXRotation(double yaw, double pitch) {
@@ -240,4 +250,6 @@ public class Axis {
         this.z.y = c2*s3;
         this.z.z = c2*c3;
     }
+
+    
 }

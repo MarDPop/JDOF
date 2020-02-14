@@ -24,8 +24,14 @@ public class Cartesian {
 
     public Cartesian(double[] b) {
         this.x = b[0];
-        this.y = b[0];
-        this.z = b[0];
+        this.y = b[1];
+        this.z = b[2];
+    }
+
+    public void zero() {
+        this.x = 0.0;
+        this.y = 0.0;
+        this.z = 0.0;
     }
 
     public void set(Cartesian b) {
@@ -36,6 +42,11 @@ public class Cartesian {
 
     public double[] toArray() {
         return new double[]{x,y,z};
+    }
+
+    @Override
+    public String toString() {
+        return "[ " + this.x + " , " + this.y + " , " + this.z + " ]";
     }
 
     public double distance() {

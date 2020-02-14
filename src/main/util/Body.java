@@ -1,18 +1,18 @@
 package main.util;
 
 /**
- * Class describing a 6DOF body
+ * Class describing a 6DOF body (all defaults are 'non dimensional')
  */
 public class Body {
 
     // Position Vectors
-    protected Cartesian position = new Cartesian();
-    protected Cartesian velocity = new Cartesian();
-    protected Cartesian acceleration = new Cartesian();
+    protected final Cartesian position = new Cartesian();
+    protected final Cartesian velocity = new Cartesian();
+    protected final Cartesian acceleration = new Cartesian();
 
     //Rotation Vectors
-    protected Cartesian eulerAngles = new Cartesian(); // roll pitch yaw (x,y,z axis rotation)
-    protected Cartesian angularVelocity = new Cartesian(); // remember that angular velocity is components of instantenous angular rate
+    protected final Cartesian eulerAngles = new Cartesian(); // roll pitch yaw (x,y,z axis rotation)
+    protected final Cartesian angularVelocity = new Cartesian(); // remember that angular velocity is components of instantenous angular rate
     protected Cartesian angularAccleration = new Cartesian(); 
 
     /**
@@ -21,9 +21,9 @@ public class Body {
     protected Axis axis = new Axis(true);
 
     /**
-     * Mass in kg
+     * Mass in kg. 
      */
-    protected double mass;
+    protected double mass = 1; 
 
     /**
      * Inertia matrix (standard in kg-m2)
@@ -33,12 +33,22 @@ public class Body {
     /**
      *  Inverse Inertia for easier computing
      */
-    protected Axis invInertia;
+    protected Axis invInertia = new Axis(true);
 
     /**
      * All actions acting on body (used to compute acceleration)
      */
-    protected Action[] actions;
+    protected Action[] actions = new Action[0];
+
+    /**
+     * meh
+     */
+    protected int nActions = 0;
+
+    /**
+     * Gravity (since body must have mass, gravity must be acting, but can assign a zero one if not needed)
+     */
+    protected Gravity g = new Gravity();
 
     /**
      * Empty constructor
@@ -104,6 +114,7 @@ public class Body {
         this.angularVelocity.x = state[9];
         this.angularVelocity.y = state[10];
         this.angularVelocity.z = state[11];
+        setAxisFromAngles();
     }
 
     /**
@@ -128,21 +139,54 @@ public class Body {
      */
     public void setActions(Action[] actions) {
         this.actions = actions;
+        this.nActions = this.actions.length;
+    }
+
+    /**
+     * Resize and add action
+     * @param a
+     */
+    public void addAction(Action a) {
+        Action[] tempActions = new Action[this.actions.length+1];
+        System.arraycopy(this.actions, 0, tempActions, 0, this.actions.length);
+        tempActions[this.actions.length] = a;
+        this.actions = tempActions;
+        this.nActions = this.actions.length;
     }
 
     /**
      * Computes all actions and applies them to body
      */
     public void computeActions() {
-        Cartesian sumForce = new Cartesian();
-        Cartesian sumTorque = new Cartesian();
-        for(Action action : this.actions) {
-            MyPair<Cartesian,Cartesian> components = action.getAction();
-            sumForce.add(components.a);
-            sumTorque.add(components.b);
+        this.acceleration.zero();
+        this.angularAccleration.zero();
+        for(int i = nActions; i-- > 0;) {
+            MyPair<Cartesian,Cartesian> components = actions[i].getAction();
+            this.acceleration.add(components.a);
+            this.angularAccleration.add(components.b);
         }
-        this.acceleration = sumForce.multiply(1/this.mass);
-        this.angularAccleration = invInertia.multiply(sumTorque); // ASSUMPTION
+        this.acceleration.scale(1/this.mass);
+        
+        this.acceleration.add(g.get());
+        // Generally valid assumption here that inertia change isn't a factor (missing dI/dt * omega and dm/dt v) this needs to be overridden if not the case
+        this.angularAccleration = invInertia.multiply(this.angularAccleration); 
+    }
+
+    /**
+     * Computes and sets body frame from roll pitch and yaw
+     * @param roll
+     * @param pitch
+     * @param yaw
+     */
+    public void setAxisFromAngles(double roll, double pitch, double yaw) {
+        this.axis.rotationMatrixIntrinsic(yaw,pitch,roll);
+    }
+
+    /**
+     * 
+     */
+    protected void setAxisFromAngles() {
+        this.axis.rotationMatrixIntrinsic(eulerAngles.z,eulerAngles.y,eulerAngles.x);
     }
 
     /**
@@ -172,7 +216,7 @@ public class Body {
      * @param position the position to set
      */
     public void setPosition(Cartesian position) {
-        this.position = position;
+        this.position.set(position);
     }
 
     /**
@@ -186,7 +230,7 @@ public class Body {
      * @param velocity the velocity to set
      */
     public void setVelocity(Cartesian velocity) {
-        this.velocity = velocity;
+        this.velocity.set(velocity);
     }
 
     /**
@@ -200,7 +244,7 @@ public class Body {
      * @param acceleration the acceleration to set
      */
     public void setAcceleration(Cartesian acceleration) {
-        this.acceleration = acceleration;
+        this.acceleration.set(acceleration);
     }
 
     /**
@@ -214,7 +258,7 @@ public class Body {
      * @param eulerAngles the eulerAngles to set
      */
     public void setEulerAngles(Cartesian eulerAngles) {
-        this.eulerAngles = eulerAngles;
+        this.eulerAngles.set(eulerAngles);
     }
 
     /**
@@ -228,7 +272,7 @@ public class Body {
      * @param angular_velocity the angular_velocity to set
      */
     public void setAngularVelocity(Cartesian angularVelocity) {
-        this.angularVelocity = angularVelocity;
+        this.angularVelocity.set(angularVelocity);
     }
 
     /**
@@ -242,7 +286,7 @@ public class Body {
      * @param torque the torque to set
      */
     public void getAngularAcceleration(Cartesian angularAccleration) {
-        this.angularAccleration = angularAccleration;
+        this.angularAccleration.set(angularAccleration);
     }
 
     /**

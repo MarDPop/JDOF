@@ -2,6 +2,7 @@ package main.view;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 
@@ -23,6 +24,11 @@ public class JPlot extends JFrame {
         getContentPane().add(plotArea);
 
         setVisible(true);
+    }
+
+    public JPlot(ArrayList<Double> x, ArrayList<Double> y) {
+        this();
+        plotArea.plot(x,y,new HashMap<String,Object>());
     }
 
     public JPlot(ArrayList<Double> x, ArrayList<Double> y, Map<String,Object> options) {

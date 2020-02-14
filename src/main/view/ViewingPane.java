@@ -108,9 +108,9 @@ public class ViewingPane extends JPanel implements MouseListener, MouseMotionLis
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawSurfaces(g);
-        g2d.setColor(Color.magenta);
-        plotArrow(new Cartesian(0,0,0), freeStream);
+        if (this.surfaces != null){
+            drawSurfaces(g);
+        }
     }
 
     public void setSurfaces(ArrayList<Surface> s) {

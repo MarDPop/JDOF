@@ -1,11 +1,28 @@
 package main.util.aero;
 
+import main.util.aero.atmosphere.*;
+import main.vehicle.*;
+
 public class TestAero extends Aerodynamics {
 
+    double K;
+
+    public TestAero(Vehicle v) {
+        this.atm = new BasicAtmosphere();
+        this.vehicle = v;
+    }
+
+     @Override
+    public void setReferences(double area, double span, double chord) {
+        super.setReferences(area, span, chord);
+        double AR = this.span_reference*this.span_reference/this.area_reference;
+        this.K = 1.05/(3.142*AR); 
+    }
+
     @Override
-    public void getAeroCoefficients() {
-        double CL = 6*this.angleOfAttack;
-        double CD = 0.2 + 0.002*CL*CL;
+    public void calcAeroCoefficients() {
+        double CL = 0.2 + 6*this.angleOfAttack;
+        double CD = 0.05 + this.K*CL*CL;
         if(this.angleOfAttack > 0.25) {
             if(this.angleOfAttack < 1) {
                 CL = 1.75-this.angleOfAttack*1.75;
@@ -15,11 +32,11 @@ public class TestAero extends Aerodynamics {
         } 
         double CR = 0.1*this.sideSlipAngle;
 
-        double CMy = -0.01*this.angleOfAttack;
+        double CMy = -0.1*this.angleOfAttack;
         double CMz = -0.01*this.sideSlipAngle;
-        double CMx = -0.001*this.rollAngle;
+        double CMx = -0.0001*this.rollAngle;
 
-        double dEl = this.vehicle.test.getElevatorDeflection(3000,vehicle.getPosition().z,vehicle.getVelocity().z,this.angleOfAttack );
+        double dEl = 0;//this.vehicle.test.getElevatorDeflection(3000,vehicle.getPosition().z,vehicle.getVelocity().z,this.angleOfAttack );
         double dCMy = dEl*0.02;
         double dCL = dEl*-0.01;
         double dCD = dEl*0.005;

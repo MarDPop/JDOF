@@ -36,4 +36,14 @@ public class CartesianMatrixTest extends Test {
 
         return assertEquals(A.inv().toArray(),B.toArray(),1e-6);
     }
+
+    @TestCase
+    public boolean rotationTest() {
+        Axis A = new Axis(true);
+        A.rotationMatrixIntrinsic(0, 0, 0.1);
+
+        Axis B = Axis.getXRotationMatrix(0.1);
+
+        return assertEquals(A.toArray(),B.toArray(),1e-6);
+    }
 }
