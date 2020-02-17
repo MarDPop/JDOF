@@ -13,7 +13,7 @@ public class ODE_Euler extends Integrator {
 
     public ODE_Euler () { 
         this.record = new SimpleRecorder("testfile.csv");
-        record.header = new String[]{"time","X","Y","Z","U","V","W","Roll","Pitch","Yaw","AOA","CL","Pitch Moment","Q"};
+        record.header = new String[]{"time","X","Y","Z","Vx","Vy","Vz","Ax","Ay","Az","Roll","Pitch","Yaw","AOA","CL","Pitch Moment","Q","Downx","Downy","Downz"};
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ODE_Euler extends Integrator {
     @Override 
     public void output() {
         if( this.record != null) {
-            double[] row = new double[14];
+            double[] row = new double[20];
             row[0] = this.time;
             row[1] = this.body.getPosition().x;
             row[2] = this.body.getPosition().y;
@@ -33,13 +33,19 @@ public class ODE_Euler extends Integrator {
             row[4] = this.body.getVelocity().x;
             row[5] = this.body.getVelocity().y;
             row[6] = this.body.getVelocity().z;
-            row[7] = (this.body.getEulerAngles().x % MyMath.TWOPI)*MyMath.RAD2DEG;
-            row[8] = (this.body.getEulerAngles().y % MyMath.TWOPI)*MyMath.RAD2DEG;
-            row[9] = (this.body.getEulerAngles().z % MyMath.TWOPI)*MyMath.RAD2DEG;
-            row[10] = ((Vehicle)this.body).getAero().getAngleOfAttack()*MyMath.RAD2DEG;
-            row[11] = ((Vehicle)this.body).getAero().getAeroCoefficients().getCL();
-            row[12] = this.body.getAngularAcceleration().y;
-            row[13] = ((Vehicle)this.body).getAero().getDynamicPressure();
+            row[7] = this.body.getAcceleration().x;
+            row[8] = this.body.getAcceleration().y;
+            row[9] = this.body.getAcceleration().z;
+            row[10] = (this.body.getEulerAngles().x % MyMath.TWOPI)*MyMath.RAD2DEG;
+            row[11] = (this.body.getEulerAngles().y % MyMath.TWOPI)*MyMath.RAD2DEG;
+            row[12] = (this.body.getEulerAngles().z % MyMath.TWOPI)*MyMath.RAD2DEG;
+            row[13] = ((Vehicle)this.body).getAero().getAngleOfAttack()*MyMath.RAD2DEG;
+            row[14] = ((Vehicle)this.body).getAero().getAeroCoefficients().getCL();
+            row[15] = this.body.getAngularAcceleration().y;
+            row[16] = ((Vehicle)this.body).getAero().getDynamicPressure();
+            row[17] = this.body.getAxis().z.x;
+            row[18] = this.body.getAxis().z.y;
+            row[19] = this.body.getAxis().z.z;
             record.data.add(row);
         }
     }

@@ -116,6 +116,44 @@ public final class MyMath {
         }
     }
 
+    /**
+     * 
+     * @param x
+     * @return
+     */
+    public static double sin(double x) {
+        if(x < 0){
+            return -sin(-x);
+        }
+        if(x > HALFPI) {
+            if(x > Math.PI) {
+                if(x > TWOPI) {
+                    return sin(x % TWOPI);
+                }
+                return -sin(x-Math.PI);
+            }
+            return sin(HALFPI-x);
+        }
+        double res=x;
+        double x2 = -x*x;
+        x *= x2;
+        res += x*0.1666666666666666;
+        if (x2 < -0.01) {
+            x *= x2;
+            res += x*0.008333333333333;
+            if (x2 < -0.25) {
+                x *= x2;
+                res += x*1.984126984126984e-04;
+                if (x < -0.8) {
+                    x *= x2;
+                    res += x*2.755731922398589e-06;
+                }
+            }
+        }
+        return res;
+    }
+    
+
     public static double acos(double x) {
         boolean negate = x < 0;
         if (negate) {

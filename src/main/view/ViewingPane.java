@@ -58,8 +58,6 @@ public class ViewingPane extends JPanel implements MouseListener, MouseMotionLis
      */
     public boolean getResult;
 
-    private Cartesian freeStream;
-
     /**
      * Constructor
      */

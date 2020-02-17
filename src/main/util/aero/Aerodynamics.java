@@ -93,7 +93,7 @@ public abstract class Aerodynamics implements Action {
     @Override
     public MyPair<Cartesian, Cartesian> getAction() {
         // Set atmosphere
-        this.atm.setAltitude(vehicle.getPosition().z);
+        this.atm.setAltitude(-vehicle.getPosition().z); // remember vehicles use North East Down
 
         // Get Freestream
         Cartesian wind = atm.getWind();
@@ -118,7 +118,7 @@ public abstract class Aerodynamics implements Action {
 
         // Angles
         // NOTE: Stability axis is defined as: y = body axis y (right), x = freestream, z = x cross y
-        this.angleOfAttack = -Math.asin(freestream.dot(vehicle.getAxis().z)/airspeed); // remember z is down
+        this.angleOfAttack = Math.asin(freestream.dot(vehicle.getAxis().z)/airspeed); // remember z is down
         this.sideSlipAngle = Math.asin(freestream.dot(vehicle.getAxis().y)/airspeed);
         this.rollAngle = Math.asin(vehicle.getAxis().y.z);
 
@@ -129,7 +129,7 @@ public abstract class Aerodynamics implements Action {
         double side = cons*C.getCR();
         double lift = cons*C.getCL();
 
-        System.out.println("lift = " + lift +" density = " + this.atm.getDensity());
+        // System.out.println("lift = " + lift);
 
         // Convert Forces to Global Frame
         Cartesian forces = vector_lift.multiply(lift).plus(vehicle.getAxis().y.multiply(side)).minus(freestream.multiply(drag/airspeed));

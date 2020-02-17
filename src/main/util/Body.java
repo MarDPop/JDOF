@@ -2,6 +2,7 @@ package main.util;
 
 /**
  * Class describing a 6DOF body (all defaults are 'non dimensional')
+ * Body doesn't presume a frame, it must be understood (ie. most vehicles are NORTH EAST DOWN)
  */
 public class Body {
 
@@ -11,7 +12,7 @@ public class Body {
     protected final Cartesian acceleration = new Cartesian();
 
     //Rotation Vectors
-    protected final Cartesian eulerAngles = new Cartesian(); // roll pitch yaw (x,y,z axis rotation)
+    protected final Cartesian angles = new Cartesian(); // roll pitch yaw (x,y,z axis rotation)
     protected final Cartesian angularVelocity = new Cartesian(); // remember that angular velocity is components of instantenous angular rate
     protected Cartesian angularAccleration = new Cartesian(); 
 
@@ -67,9 +68,9 @@ public class Body {
         state[3] = this.velocity.x;
         state[4] = this.velocity.y;
         state[5] = this.velocity.z;
-        state[6] = this.eulerAngles.x;
-        state[7] = this.eulerAngles.y;
-        state[8] = this.eulerAngles.z;
+        state[6] = this.angles.x;
+        state[7] = this.angles.y;
+        state[8] = this.angles.z;
         state[9] = this.angularVelocity.x;
         state[10] = this.angularVelocity.y;
         state[11] = this.angularVelocity.z;
@@ -108,9 +109,9 @@ public class Body {
         this.velocity.x = state[3];
         this.velocity.y = state[4];
         this.velocity.z = state[5];
-        this.eulerAngles.x = state[6];
-        this.eulerAngles.y = state[7];
-        this.eulerAngles.z = state[8];
+        this.angles.x = state[6];
+        this.angles.y = state[7];
+        this.angles.z = state[8];
         this.angularVelocity.x = state[9];
         this.angularVelocity.y = state[10];
         this.angularVelocity.z = state[11];
@@ -166,10 +167,18 @@ public class Body {
             this.angularAccleration.add(components.b);
         }
         this.acceleration.scale(1/this.mass);
-        
+        // Add gravity
         this.acceleration.add(g.get());
-        // Generally valid assumption here that inertia change isn't a factor (missing dI/dt * omega and dm/dt v) this needs to be overridden if not the case
+
+        // Generally valid assumption here that inertia change isn't a factor (missing dI/dt * omega) this needs to be overridden if not the case
+        // Remember this is in body frame right now, Euler angles are in Global North East Down frame
         this.angularAccleration = invInertia.multiply(this.angularAccleration); 
+        Cartesian x_component = this.axis.x.multiply(this.angularAccleration.x);
+        Cartesian y_component = this.axis.y.multiply(this.angularAccleration.y);
+        Cartesian z_component = this.axis.z.multiply(this.angularAccleration.z);
+        this.angularAccleration.x = x_component.x + y_component.x + z_component.x;
+        this.angularAccleration.y = x_component.y + y_component.y + z_component.y;
+        this.angularAccleration.z = x_component.z + y_component.z + z_component.z;
     }
 
     /**
@@ -186,7 +195,7 @@ public class Body {
      * 
      */
     protected void setAxisFromAngles() {
-        this.axis.rotationMatrixIntrinsic(eulerAngles.z,eulerAngles.y,eulerAngles.x);
+        this.axis.rotationMatrixIntrinsic(angles.z,angles.y,angles.x);
     }
 
     /**
@@ -251,14 +260,14 @@ public class Body {
      * @return the eulerAngles
      */
     public Cartesian getEulerAngles() {
-        return eulerAngles;
+        return angles;
     }
 
     /**
      * @param eulerAngles the eulerAngles to set
      */
     public void setEulerAngles(Cartesian eulerAngles) {
-        this.eulerAngles.set(eulerAngles);
+        this.angles.set(eulerAngles);
     }
 
     /**

@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import java.awt.Color;
 
 import main.vehicle.Vehicle;
 import main.vehicle.component.*;
@@ -21,41 +22,50 @@ public class App {
         if(args[0].equals("test")) {
             Test.runAll();
         }
-
+        /*
         gui = new MainFrame(VERSION_NO);
 
         gui.setSize(1200,800);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setVisible(true);
+        */
 
         Vehicle v = new Vehicle();
         Aerodynamics aero = new TestAero(v);
         aero.setReferences(1, 2, 0.5);
 
-        Axis inertia = new Axis(new double[][]{{100,0,0},{0,100,0},{0,0,100}});
-        v.setInertia(40, inertia);
-        v.setPosition(new Cartesian(0,0,2000));
-        v.setVelocity(new Cartesian(100,0,0));
+        Axis inertia = new Axis(new double[][]{{100,0,0},{0,20,0},{0,0,100}});
+        v.setInertia(25, inertia);
+        v.setPosition(new Cartesian(0,0,-2000));
+        v.setVelocity(new Cartesian(50,0,0));
         
         v.setAerodynamics(aero);
-        v.addAction(new BasicEngine(v,100));
+        v.addAction(new BasicEngine(v,85));
         
         ODE_Euler ode = new ODE_Euler();
         ode.setBody(v);
-        ode.setEndTime(100);
-        ode.setStepSize(0.05);
+        ode.setEndTime(120);
+        ode.setStepSize(0.025);
 
         ode.run();
 
         java.util.ArrayList<Double> x = new java.util.ArrayList<>();
-        java.util.ArrayList<Double> y = new java.util.ArrayList<>();
+        java.util.ArrayList<Double> h = new java.util.ArrayList<>();
+        java.util.ArrayList<Double> speed = new java.util.ArrayList<>();
         for(double[] arr : ode.record.data){
             x.add(arr[1]);
-            y.add(arr[3]);
+            h.add(-arr[3]);
+            speed.add(Math.sqrt(arr[4]*arr[4]+arr[5]*arr[5]+arr[6]*arr[6]));
         }
 
         java.util.HashMap<String,Object> o = new java.util.HashMap<>();
         o.put("Title","Path");
-        JPlot plot = new JPlot(x,y,o);
+        
+        JPlot plot = new JPlot(x,h,o);
+        /*
+        java.util.HashMap<String,Object> o2 = new java.util.HashMap<>();
+        o.put("Color",Color.GREEN);
+        plot.addPlot(x, speed, o2);
+        */
     }
 }

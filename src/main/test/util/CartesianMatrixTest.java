@@ -40,9 +40,9 @@ public class CartesianMatrixTest extends Test {
     @TestCase
     public boolean rotationTest() {
         Axis A = new Axis(true);
-        A.rotationMatrixIntrinsic(0, 0, 0.1);
+        A.rotationMatrixIntrinsic(0, 0.1, 0.0);
 
-        Axis B = Axis.getXRotationMatrix(0.1);
+        Axis B = Axis.getYRotationMatrix(0.1);
 
         return assertEquals(A.toArray(),B.toArray(),1e-6);
     }

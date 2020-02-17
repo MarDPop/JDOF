@@ -39,6 +39,12 @@ public class TestController {
         return this.deflection;
     }
 
+    public double getElevatorDeflection(double vertical_speed, double vertical_acceleration) {
+        this.deflection = -0.5*vertical_speed;
+        saturationLimit();
+        return this.deflection;
+    }
+
     private void saturationLimit() {
         if (this.deflection > 25) {
             this.deflection = 25;

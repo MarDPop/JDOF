@@ -173,7 +173,7 @@ public class Axis {
     public static Axis getXRotationMatrix(double angle) {
         Axis out = new Axis(true);
         out.y.y = Math.cos(angle);
-        out.y.z = -Math.sin(angle);
+        out.y.z = -Math.sin(angle); 
         out.z.y = -out.y.z;
         out.z.z = out.y.y;
         return out;

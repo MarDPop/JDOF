@@ -7,6 +7,8 @@ public class TestAero extends Aerodynamics {
 
     double K;
 
+    public double testVariable;
+
     public TestAero(Vehicle v) {
         this.atm = new BasicAtmosphere();
         this.vehicle = v;
@@ -32,12 +34,13 @@ public class TestAero extends Aerodynamics {
         } 
         double CR = 0.1*this.sideSlipAngle;
 
-        double CMy = -0.1*this.angleOfAttack;
-        double CMz = -0.01*this.sideSlipAngle;
-        double CMx = -0.0001*this.rollAngle;
+        double CMy = -0.0*this.angleOfAttack;
+        double CMz = -0.00*this.sideSlipAngle;
+        double CMx = -0.000*this.rollAngle;
 
-        double dEl = 0;//this.vehicle.test.getElevatorDeflection(3000,vehicle.getPosition().z,vehicle.getVelocity().z,this.angleOfAttack );
-        double dCMy = dEl*0.02;
+        // double dEl = this.vehicle.test.getElevatorDeflection(3000,vehicle.getPosition().z,vehicle.getVelocity().z,this.angleOfAttack );
+        double dEl = 0; //this.vehicle.test.getElevatorDeflection(vehicle.getVelocity().z,vehicle.getAcceleration().z);
+        double dCMy = dEl*0.001;
         double dCL = dEl*-0.01;
         double dCD = dEl*0.005;
 
