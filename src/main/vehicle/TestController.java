@@ -2,7 +2,8 @@ package main.vehicle;
 
 public class TestController {
 
-    double deflection;
+    double deflection, trimDeflection;
+    public double dt;
 
     public TestController() {
         this.deflection=0;
@@ -41,7 +42,8 @@ public class TestController {
 
     public double getElevatorDeflection(double vertical_speed, double vertical_acceleration, double pitch_rate) {
         // this.deflection = -0.0005*vertical_speed - 0.00001*vertical_acceleration - 0.001*pitch_rate;
-        this.deflection = -0.001*pitch_rate;
+        this.trimDeflection += 5e-5*vertical_speed*dt;
+        this.deflection = this.trimDeflection-0.2*pitch_rate;
         saturationLimit();
         return this.deflection;
     }
