@@ -13,7 +13,7 @@ public class ODE_Euler extends Integrator {
 
     public ODE_Euler () { 
         this.record = new SimpleRecorder("testfile.csv");
-        record.header = new String[]{"time","X","Y","Z","Vx","Vy","Vz","Ax","Ay","Az","Roll","Pitch","Yaw","AOA","CL","Pitch Moment","Q","Downx","Downy","Downz"};
+        record.header = new String[]{"time","X","Y","Z","Vx","Vy","Vz","Ax","Ay","Az","Roll","Pitch","Yaw","AOA","CL","Pitch Moment","Q","Elevator"};
     }
 
     @Override
@@ -43,9 +43,7 @@ public class ODE_Euler extends Integrator {
             row[14] = ((Vehicle)this.body).getAero().getAeroCoefficients().getCL();
             row[15] = this.body.getAngularAcceleration().y;
             row[16] = ((Vehicle)this.body).getAero().getDynamicPressure();
-            row[17] = this.body.getAxis().z.x;
-            row[18] = this.body.getAxis().z.y;
-            row[19] = this.body.getAxis().z.z;
+            row[17] = ((Vehicle)this.body).test.getDeflection();
             record.data.add(row);
         }
     }

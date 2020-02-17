@@ -39,8 +39,9 @@ public class TestController {
         return this.deflection;
     }
 
-    public double getElevatorDeflection(double vertical_speed, double vertical_acceleration) {
-        this.deflection = -0.5*vertical_speed;
+    public double getElevatorDeflection(double vertical_speed, double vertical_acceleration, double pitch_rate) {
+        // this.deflection = -0.0005*vertical_speed - 0.00001*vertical_acceleration - 0.001*pitch_rate;
+        this.deflection = -0.001*pitch_rate;
         saturationLimit();
         return this.deflection;
     }
@@ -53,4 +54,13 @@ public class TestController {
             this.deflection = -25;
         }
     }
+
+    public double getElevatorDeflection(double pitch_rate) {
+        // this.deflection = -0.0005*vertical_speed - 0.00001*vertical_acceleration - 0.001*pitch_rate;
+        this.deflection = -0.1*pitch_rate;
+        saturationLimit();
+        return this.deflection;
+    }
+
+
 }

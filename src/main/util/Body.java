@@ -173,6 +173,7 @@ public class Body {
         // Generally valid assumption here that inertia change isn't a factor (missing dI/dt * omega) this needs to be overridden if not the case
         // Remember this is in body frame right now, Euler angles are in Global North East Down frame
         this.angularAccleration = invInertia.multiply(this.angularAccleration); 
+        // Convert to INERTIAL FRAME -> May not be necessary if body state recalculates angles Please Review
         Cartesian x_component = this.axis.x.multiply(this.angularAccleration.x);
         Cartesian y_component = this.axis.y.multiply(this.angularAccleration.y);
         Cartesian z_component = this.axis.z.multiply(this.angularAccleration.z);
