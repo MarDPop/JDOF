@@ -22,20 +22,16 @@ public class TestController {
         return this.deflection;
     }
 
-    public double getElevatorDeflection(double altitude_desired, double altitude, double vertical_speed, double angle_of_attack) {
-        double desiredRateOfClimb = 0.01*(altitude_desired-altitude);
-        double aoa = angle_of_attack*57.2958;
-        if(desiredRateOfClimb > 5) {
-            desiredRateOfClimb = 5;
+    public double getElevatorDeflection(double altitude_desired, double altitude, double vertical_speed, double pitch_rate) {
+        double desiredRateOfClimb = 0.005*(altitude_desired-altitude);
+        if(desiredRateOfClimb > 6) {
+            desiredRateOfClimb = 6;
         } else if(desiredRateOfClimb < -3) {
             desiredRateOfClimb = -3;
         }
-        double delta = desiredRateOfClimb - vertical_speed;
-        if(aoa < 10) {
-            this.deflection += 0.5*delta;
-        } else {
-            this.deflection = 10-aoa;
-        }
+        double delta = desiredRateOfClimb + vertical_speed;
+        this.trimDeflection += 5e-5*delta*dt;
+        this.deflection = this.trimDeflection-0.25*pitch_rate;
         saturationLimit();
         return this.deflection;
     }

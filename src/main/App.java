@@ -36,16 +36,16 @@ public class App {
 
         Axis inertia = new Axis(new double[][]{{100,0,0},{0,18,0},{0,0,100}});
         v.setInertia(25, inertia);
-        v.setPosition(new Cartesian(0,0,-2000));
+        v.setPosition(new Cartesian(0,0,-2500));
         v.setVelocity(new Cartesian(50,0,0));
         
         v.setAerodynamics(aero);
-        v.addAction(new BasicEngine(v,68));
+        v.addAction(new BasicEngine(v,70));
         v.test.dt = 0.02;
         
         ODE_Euler ode = new ODE_Euler();
         ode.setBody(v);
-        ode.setEndTime(300);
+        ode.setEndTime(600);
         ode.setStepSize(0.02);
 
         ode.run();
