@@ -92,11 +92,7 @@ public abstract class Integrator {
         this.dt = dt;
     }
 
-    public void setup(){
-        if (this.body.getMass() <= 0) {
-            
-        }
-    }
+    public void setup(){}
 
     public abstract void step();
 

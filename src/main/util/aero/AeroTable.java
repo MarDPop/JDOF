@@ -1,8 +1,8 @@
 package main.util.aero;
 
-public class Aero2DTable {
+public class AeroTable {
 
     public AeroCoefficients[][] table;
 
-    public Aero2DTable() { }
+    public AeroTable() { }
 }

@@ -40,13 +40,13 @@ public class App {
         v.setVelocity(new Cartesian(50,0,0));
         
         v.setAerodynamics(aero);
-        v.addAction(new BasicEngine(v,70));
+        v.addAction(new BasicEngine(v,50));
         v.test.dt = 0.02;
         
         ODE_Euler ode = new ODE_Euler();
         ode.setBody(v);
-        ode.setEndTime(600);
-        ode.setStepSize(0.02);
+        ode.setEndTime(720);
+        ode.setStepSize(0.025);
 
         ode.run();
 

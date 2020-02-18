@@ -129,8 +129,6 @@ public abstract class Aerodynamics implements Action {
         double side = cons*C.getCR();
         double lift = cons*C.getCL();
 
-        // System.out.println("lift = " + lift);
-
         // Convert Forces to Global Frame
         Cartesian forces = vector_lift.multiply(lift).plus(vehicle.getAxis().y.multiply(side)).minus(freestream.multiply(drag/airspeed));
 

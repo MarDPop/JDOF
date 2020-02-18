@@ -1,8 +1,11 @@
 package main.util;
 
+import main.util.integrator.Integrator;
+
 /**
- * Class describing a 6DOF body (all defaults are 'non dimensional')
- * Body doesn't presume a frame, it must be understood (ie. most vehicles are NORTH EAST DOWN)
+ * Class describing a 6DOF body (all defaults are 'non dimensional') Body
+ * doesn't presume a frame, it must be understood (ie. most vehicles are NORTH
+ * EAST DOWN)
  */
 public class Body {
 
@@ -52,6 +55,11 @@ public class Body {
     protected Gravity g = new Gravity();
 
     /**
+     * Body implies integrator
+     */
+    protected Integrator ode;
+
+    /**
      * Empty constructor
      */
     public Body() { }
@@ -61,7 +69,7 @@ public class Body {
      * @return
      */
     public double[] getState() {
-        double[] state = new double[12];
+        final double[] state = new double[12];
         state[0] = this.position.x;
         state[1] = this.position.y;
         state[2] = this.position.z;
@@ -79,10 +87,11 @@ public class Body {
 
     /**
      * returns rate of change of state
+     * 
      * @return
      */
     public double[] getStateRate() {
-        double[] dstate = new double[12];
+        final double[] dstate = new double[12];
         dstate[0] = this.velocity.x;
         dstate[1] = this.velocity.y;
         dstate[2] = this.velocity.z;
@@ -100,9 +109,10 @@ public class Body {
 
     /**
      * loads state from double array
+     * 
      * @param state
      */
-    public void setState(double[] state) {
+    public void setState(final double[] state) {
         this.position.x = state[0];
         this.position.y = state[1];
         this.position.z = state[2];
@@ -123,11 +133,11 @@ public class Body {
      * @param mass
      * @param inertia
      */
-    public void setInertia(double mass, Axis inertia) throws IllegalArgumentException {
-        if(inertia.x.x <= 0 || inertia.y.y <= 0 || inertia.z.z <= 0) {
+    public void setInertia(final double mass, final Axis inertia) throws IllegalArgumentException {
+        if (inertia.x.x <= 0 || inertia.y.y <= 0 || inertia.z.z <= 0) {
             throw new IllegalArgumentException("Inertia Matrix must have positive and non-zero principal values");
         }
-        if(mass <= 0) {
+        if (mass <= 0) {
             throw new IllegalArgumentException("mass must be positive and non-zero");
         }
         this.mass = mass;
@@ -138,17 +148,18 @@ public class Body {
     /**
      * Sets actions
      */
-    public void setActions(Action[] actions) {
+    public void setActions(final Action[] actions) {
         this.actions = actions;
         this.nActions = this.actions.length;
     }
 
     /**
      * Resize and add action
+     * 
      * @param a
      */
-    public void addAction(Action a) {
-        Action[] tempActions = new Action[this.actions.length+1];
+    public void addAction(final Action a) {
+        final Action[] tempActions = new Action[this.actions.length + 1];
         System.arraycopy(this.actions, 0, tempActions, 0, this.actions.length);
         tempActions[this.actions.length] = a;
         this.actions = tempActions;
@@ -161,22 +172,25 @@ public class Body {
     public void computeActions() {
         this.acceleration.zero();
         this.angularAccleration.zero();
-        for(int i = nActions; i-- > 0;) {
-            MyPair<Cartesian,Cartesian> components = actions[i].getAction();
+        for (int i = nActions; i-- > 0;) {
+            final MyPair<Cartesian, Cartesian> components = actions[i].getAction();
             this.acceleration.add(components.a);
             this.angularAccleration.add(components.b);
         }
-        this.acceleration.scale(1/this.mass);
+        this.acceleration.scale(1 / this.mass);
         // Add gravity
         this.acceleration.add(g.get());
 
-        // Generally valid assumption here that inertia change isn't a factor (missing dI/dt * omega) this needs to be overridden if not the case
-        // Remember this is in body frame right now, Euler angles are in Global North East Down frame
-        this.angularAccleration = invInertia.multiply(this.angularAccleration); 
-        // Convert to INERTIAL FRAME -> May not be necessary if body state recalculates angles Please Review
-        Cartesian x_component = this.axis.x.multiply(this.angularAccleration.x);
-        Cartesian y_component = this.axis.y.multiply(this.angularAccleration.y);
-        Cartesian z_component = this.axis.z.multiply(this.angularAccleration.z);
+        // Generally valid assumption here that inertia change isn't a factor (missing
+        // dI/dt * omega) this needs to be overridden if not the case
+        // Remember this is in body frame right now, Euler angles are in Global North
+        // East Down frame
+        this.angularAccleration = invInertia.multiply(this.angularAccleration);
+        // Convert to INERTIAL FRAME -> May not be necessary if body state recalculates
+        // angles Please Review
+        final Cartesian x_component = this.axis.x.multiply(this.angularAccleration.x);
+        final Cartesian y_component = this.axis.y.multiply(this.angularAccleration.y);
+        final Cartesian z_component = this.axis.z.multiply(this.angularAccleration.z);
         this.angularAccleration.x = x_component.x + y_component.x + z_component.x;
         this.angularAccleration.y = x_component.y + y_component.y + z_component.y;
         this.angularAccleration.z = x_component.z + y_component.z + z_component.z;
@@ -184,23 +198,25 @@ public class Body {
 
     /**
      * Computes and sets body frame from roll pitch and yaw
+     * 
      * @param roll
      * @param pitch
      * @param yaw
      */
-    public void setAxisFromAngles(double roll, double pitch, double yaw) {
-        this.axis.rotationMatrixIntrinsic(yaw,pitch,roll);
+    public void setAxisFromAngles(final double roll, final double pitch, final double yaw) {
+        this.axis.rotationMatrixIntrinsic(yaw, pitch, roll);
     }
 
     /**
      * 
      */
     protected void setAxisFromAngles() {
-        this.axis.rotationMatrixIntrinsic(angles.z,angles.y,angles.x);
+        this.axis.rotationMatrixIntrinsic(angles.z, angles.y, angles.x);
     }
 
     /**
      * Gets mass
+     * 
      * @return
      */
     public double getMass() {
@@ -209,6 +225,7 @@ public class Body {
 
     /**
      * Gets mass
+     * 
      * @return
      */
     public Axis getInertia() {
@@ -225,7 +242,7 @@ public class Body {
     /**
      * @param position the position to set
      */
-    public void setPosition(Cartesian position) {
+    public void setPosition(final Cartesian position) {
         this.position.set(position);
     }
 
@@ -239,7 +256,7 @@ public class Body {
     /**
      * @param velocity the velocity to set
      */
-    public void setVelocity(Cartesian velocity) {
+    public void setVelocity(final Cartesian velocity) {
         this.velocity.set(velocity);
     }
 
@@ -253,7 +270,7 @@ public class Body {
     /**
      * @param acceleration the acceleration to set
      */
-    public void setAcceleration(Cartesian acceleration) {
+    public void setAcceleration(final Cartesian acceleration) {
         this.acceleration.set(acceleration);
     }
 
@@ -267,7 +284,7 @@ public class Body {
     /**
      * @param eulerAngles the eulerAngles to set
      */
-    public void setEulerAngles(Cartesian eulerAngles) {
+    public void setEulerAngles(final Cartesian eulerAngles) {
         this.angles.set(eulerAngles);
     }
 
@@ -281,7 +298,7 @@ public class Body {
     /**
      * @param angular_velocity the angular_velocity to set
      */
-    public void setAngularVelocity(Cartesian angularVelocity) {
+    public void setAngularVelocity(final Cartesian angularVelocity) {
         this.angularVelocity.set(angularVelocity);
     }
 
@@ -295,7 +312,7 @@ public class Body {
     /**
      * @param torque the torque to set
      */
-    public void getAngularAcceleration(Cartesian angularAccleration) {
+    public void getAngularAcceleration(final Cartesian angularAccleration) {
         this.angularAccleration.set(angularAccleration);
     }
 
@@ -309,8 +326,25 @@ public class Body {
     /**
      * @param axis the axis to set
      */
-    public void setAxis(Axis axis) {
+    public void setAxis(final Axis axis) {
         this.axis = axis;
+    }
+
+    /**
+     * gets integrator
+     * @return
+     */
+    public Integrator getIntegrator() {
+        return this.ode;
+    }
+
+    /**
+     * 
+     * @param ode
+     */
+    public void setIntegrator(Integrator ode) {
+        this.ode = ode;
+        ode.setBody(this);
     }
 
 
