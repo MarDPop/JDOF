@@ -40,7 +40,7 @@ public class TestAero extends Aerodynamics {
 
         double pitch_rate = vehicle.getAngularVelocity().dot(this.vehicle.getAxis().y);
 
-        double dEl = this.vehicle.test.getElevatorDeflection(3000,-vehicle.getPosition().z,vehicle.getVelocity().z,pitch_rate );
+        double dEl = 0; // this.vehicle.test.getElevatorDeflection(3000,-vehicle.getPosition().z,vehicle.getVelocity().z,pitch_rate );
         // double dEl = this.vehicle.test.getElevatorDeflection(vehicle.getVelocity().z,vehicle.getAcceleration().z,pitch_rate);
         // double dEl = this.vehicle.test.getElevatorDeflection(vehicle.getAngularVelocity().dot(this.vehicle.getAxis().y));
         double dCMy = dEl*0.1;

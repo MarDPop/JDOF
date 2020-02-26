@@ -1,0 +1,13 @@
+# COMMENT
+
+BEGIN HEADER
+Name = TestVehicle 
+
+END HEADER
+
+BEGIN DATA
+
+Mass = 10
+
+
+END DATA

@@ -83,7 +83,21 @@ public class AeroCoefficients {
      * @param B
      * @return
      */
-    public AeroCoefficients add(AeroCoefficients B) {
+    public void add(AeroCoefficients B) {
+        this.CFx += B.CFx;
+        this.CFy += B.CFy;
+        this.CFz += B.CFz;
+        this.CMx += B.CMx;
+        this.CMy += B.CMy;
+        this.CMz += B.CMz;
+    }
+
+    /**
+     * Adds coefficients
+     * @param B
+     * @return
+     */
+    public AeroCoefficients plus(AeroCoefficients B) {
         AeroCoefficients out = new AeroCoefficients();
         out.CFx = this.CFx + B.CFx;
         out.CFy = this.CFy + B.CFy;
@@ -153,6 +167,22 @@ public class AeroCoefficients {
         this.CMx *= mag;
         this.CMy *= mag;
         this.CMz *= mag;
+    }
+
+    /**
+     * Scales a coefficient identified by index by amount d, if index -1 is chosen all coefficients are scaled
+     * @param d
+     * @param index
+     */
+    public AeroCoefficients multiply(double mag) {
+        AeroCoefficients out = new AeroCoefficients();
+        out.CFx = this.CFx = mag;
+        out.CFy = this.CFx = mag;
+        out.CFz = this.CFx = mag;
+        out.CMx = this.CFx = mag;
+        out.CMy = this.CFx = mag;
+        out.CMz = this.CFx = mag;
+        return out;
     }
 
     /**

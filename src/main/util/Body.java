@@ -50,16 +50,6 @@ public class Body {
     protected int nActions = 0;
 
     /**
-     * Gravity (since body must have mass, gravity must be acting, but can assign a zero one if not needed)
-     */
-    protected Gravity g = new Gravity();
-
-    /**
-     * Body implies integrator
-     */
-    protected Integrator ode;
-
-    /**
      * Empty constructor
      */
     public Body() { }
@@ -178,8 +168,6 @@ public class Body {
             this.angularAccleration.add(components.b);
         }
         this.acceleration.scale(1 / this.mass);
-        // Add gravity
-        this.acceleration.add(g.get());
 
         // Generally valid assumption here that inertia change isn't a factor (missing
         // dI/dt * omega) this needs to be overridden if not the case
@@ -204,14 +192,28 @@ public class Body {
      * @param yaw
      */
     public void setAxisFromAngles(final double roll, final double pitch, final double yaw) {
-        this.axis.rotationMatrixIntrinsic(yaw, pitch, roll);
+        this.axis.rotationMatrixIntrinsic(-yaw, -pitch, -roll);
     }
 
     /**
      * 
      */
     protected void setAxisFromAngles() {
-        this.axis.rotationMatrixIntrinsic(angles.z, angles.y, angles.x);
+        double c1 = Math.cos(this.angles.z);
+        double s1 = Math.sin(this.angles.z);
+        double c2 = Math.cos(this.angles.y);
+        double s2 = Math.sin(this.angles.y);
+        double c3 = Math.cos(this.angles.x);
+        double s3 = Math.sin(this.angles.x);
+        this.axis.x.x = c1*c2;
+        this.axis.y.x = c1*s2*s3-c3*s1;
+        this.axis.z.x = s1*s3+c1*c3*s2;
+        this.axis.x.y = c2*s1;
+        this.axis.y.y = c1*c3+s1*s2*s3;
+        this.axis.z.y = c3*s1*s2-c1*s3;
+        this.axis.x.z = -s2;
+        this.axis.y.z = c2*s3;
+        this.axis.z.z = c2*c3;
     }
 
     /**
@@ -329,23 +331,5 @@ public class Body {
     public void setAxis(final Axis axis) {
         this.axis = axis;
     }
-
-    /**
-     * gets integrator
-     * @return
-     */
-    public Integrator getIntegrator() {
-        return this.ode;
-    }
-
-    /**
-     * 
-     * @param ode
-     */
-    public void setIntegrator(Integrator ode) {
-        this.ode = ode;
-        ode.setBody(this);
-    }
-
 
 }

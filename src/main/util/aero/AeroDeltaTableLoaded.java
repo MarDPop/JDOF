@@ -51,7 +51,7 @@ public class AeroDeltaTableLoaded {
             // this could be micro optimized
             AeroCoefficients delta = coefficientDeltas[i].subtract(coefficientDeltas[i-1]);
             delta.scale((value - variable[i-1])/(variable[i]-variable[i-1]));
-            return coefficientDeltas[i-1].add(delta);
+            return coefficientDeltas[i-1].plus(delta);
         } else {
             return new AeroCoefficients(coefficientDeltas[i-1]);
         }

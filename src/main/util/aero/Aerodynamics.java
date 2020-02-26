@@ -33,11 +33,6 @@ public abstract class Aerodynamics implements Action {
     protected Atmosphere atm;
 
     /**
-     * List of control surfaces (relevant for aerodynamics)
-     */
-    public ArrayList<AeroControl> controls = new ArrayList<AeroControl>();
-
-    /**
      * Vehicle reference
      */
     protected Vehicle vehicle;

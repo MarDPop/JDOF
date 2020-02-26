@@ -1,5 +1,6 @@
 package main.util.aero;
 
+import main.util.DoubleValue;
 import main.util.aero.AeroCoefficients;;
 
 public abstract class AeroControl {
@@ -7,12 +8,12 @@ public abstract class AeroControl {
     /**
      * 
      */
-    protected double deflection;
+    protected DoubleValue deflection;
 
     /**
      * 
      */
-    protected double deflectionRate;
+    protected DoubleValue deflectionRate;
 
     /**
      * 
@@ -33,22 +34,20 @@ public abstract class AeroControl {
 
     public abstract AeroCoefficients getDeltaCoefficients();
 
-    public abstract AeroCoefficients getDeltaCoefficients(double deflection, double deflectionRate);
-
     public void setDeflection(double deflection) {
-        this.deflection = deflection;
+        this.deflection.val = deflection;
     }
 
     public double getDeflection() {
-        return this.deflection;
+        return this.deflection.val;
     }
 
     public double changeDeflection(double delta) {
-        return this.deflection += delta;
+        return this.deflection.val += delta;
     }
 
     public void move(double dt) {
-        this.deflection += this.deflectionRate*dt;
+        this.deflection.val += this.deflectionRate.val*dt;
     }
 
     public double getMaxDeflection() {
